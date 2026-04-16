@@ -12,16 +12,14 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#EA3788">
     <meta name="description" content="Aplicativo de lista de compras compartilhada com recursos de acessibilidade para todos os públicos">
-    
-    <!-- Controle de zoom e acessibilidade -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 </head>
 
 <body>
-    <!-- Skip to content link para leitores de tela -->
+    <!-- Skip to content -->
     <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
     
-    <!-- Botão de acessibilidade flutuante -->
+    <!-- Botão de acessibilidade -->
     <div class="accessibility-menu">
         <button id="accessibilityBtn" class="accessibility-btn" aria-label="Abrir menu de acessibilidade" aria-expanded="false">
             <i class="fas fa-universal-access"></i>
@@ -41,11 +39,19 @@
             <button id="leitorTela" aria-label="Modo para leitor de tela">
                 <i class="fas fa-eye"></i> Modo Leitor
             </button>
+            <button id="modoMercadoBtn" aria-label="Modo mercado para usar no supermercado">
+                <i class="fas fa-store"></i> Modo Mercado
+            </button>
             <button id="resetAcessibilidade" aria-label="Resetar configurações">
                 <i class="fas fa-undo-alt"></i> Resetar
             </button>
         </div>
     </div>
+
+    <!-- Botão flutuante de adição rápida (FAB) -->
+    <button id="fabBtn" class="fab-button" aria-label="Adicionar item rapidamente">
+        <i class="fas fa-plus"></i>
+    </button>
 
     <div class="app-container fade-in-up" id="main-content" role="main">
         <!-- Cabeçalho -->
@@ -55,15 +61,21 @@
                     <i class="fas fa-basket-shopping" aria-hidden="true"></i>
                     <h1 class="titulo" id="app-title">Lista de Compras</h1>
                 </div>
-                <button id="logoutBtn" class="btn-logout" onclick="logout()" aria-label="Sair do aplicativo">
-                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-                    <span>Sair</span>
-                </button>
+                <div class="header-actions">
+                    <button id="modoMercadoHeader" class="btn-market-mode" aria-label="Alternar modo mercado">
+                        <i class="fas fa-store"></i>
+                        <span>Mercado</span>
+                    </button>
+                    <button id="logoutBtn" class="btn-logout" onclick="logout()" aria-label="Sair do aplicativo">
+                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                        <span>Sair</span>
+                    </button>
+                </div>
             </div>
             <p class="subtitulo">Compartilhada em tempo real - Acessível para todos</p>
         </header>
 
-        <!-- Barra de estatísticas aprimorada com ARIA -->
+        <!-- Barra de estatísticas -->
         <div class="stats-bar" role="region" aria-label="Estatísticas da lista">
             <div class="stat-item">
                 <i class="fas fa-list-ul" aria-hidden="true"></i>
@@ -87,20 +99,38 @@
             </div>
         </div>
 
-        <!-- Área da lista com ARIA -->
+        <!-- Área da lista -->
         <div class="list-wrapper">
             <div class="list-header">
                 <h3><i class="fas fa-shopping-cart" aria-hidden="true"></i> Meus itens</h3>
                 <div class="header-buttons">
-                    <button id="limparCompradosBtn" class="btn-clear" onclick="limparComprados()" aria-label="Remover todos os itens comprados">
+                    <button id="selecionarMultiplosBtn" class="btn-select-multi" aria-label="Selecionar múltiplos itens">
+                        <i class="fas fa-check-double"></i>
+                        <span>Selecionar</span>
+                    </button>
+                    <button id="limparCompradosBtn" class="btn-clear" onclick="limparComprados()" aria-label="Remover itens comprados">
                         <i class="fas fa-check-double" aria-hidden="true"></i>
                         <span>Limpar comprados</span>
                     </button>
-                    <button id="limparListaBtn" class="btn-clear danger" onclick="limparLista()" aria-label="Remover todos os itens da lista">
+                    <button id="limparListaBtn" class="btn-clear danger" onclick="limparLista()" aria-label="Remover todos os itens">
                         <i class="fas fa-trash-alt" aria-hidden="true"></i>
                         <span>Limpar tudo</span>
                     </button>
                 </div>
+            </div>
+
+            <!-- Barra de ações em massa (aparece quando itens são selecionados) -->
+            <div id="bulkActionsBar" class="bulk-actions-bar" hidden>
+                <span id="selectedCount">0</span> itens selecionados
+                <button id="bulkDeleteBtn" class="bulk-delete">
+                    <i class="fas fa-trash-alt"></i> Excluir
+                </button>
+                <button id="bulkCompleteBtn" class="bulk-complete">
+                    <i class="fas fa-check-circle"></i> Marcar comprados
+                </button>
+                <button id="bulkCancelBtn" class="bulk-cancel">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
             </div>
 
             <ul id="lista" class="shopping-list" role="list" aria-label="Lista de compras">
@@ -112,19 +142,27 @@
             </ul>
         </div>
 
-        <!-- Área de adição de itens com acessibilidade -->
-        <div class="add-item-container" role="form" aria-label="Adicionar novo item">
+        <!-- Área de adição de itens (versão completa) -->
+        <div id="addItemPanel" class="add-item-container">
             <div class="add-item-wrapper">
                 <div class="input-icon">
                     <i class="fas fa-plus-circle" aria-hidden="true"></i>
                 </div>
-                <label for="item" class="visually-hidden">Nome do produto</label>
-                <input type="text" id="item" placeholder="Ex: Arroz, Leite, Café..." autocomplete="off" aria-label="Nome do produto">
+                <div class="autocomplete-wrapper">
+                    <label for="item" class="visually-hidden">Nome do produto</label>
+                    <input type="text" id="item" placeholder="Ex: Arroz, Leite, Café..." autocomplete="off" aria-label="Nome do produto">
+                    <div id="sugestoesList" class="sugestoes-list" hidden></div>
+                </div>
+                
+                <div class="quantity-input-wrapper">
+                    <label for="quantidade" class="visually-hidden">Quantidade</label>
+                    <input type="text" id="quantidade" placeholder="Qtd" value="1" aria-label="Quantidade">
+                </div>
                 
                 <div class="price-input-wrapper">
                     <span class="price-currency" aria-hidden="true">R$</span>
                     <label for="preco" class="visually-hidden">Preço médio</label>
-                    <input type="number" id="preco" placeholder="Preço" step="0.01" min="0" aria-label="Preço médio do produto">
+                    <input type="number" id="preco" placeholder="Preço" step="0.01" min="0" aria-label="Preço médio">
                 </div>
                 
                 <button id="adicionarBtn" class="btn-add" onclick="adicionarItem()" aria-label="Adicionar item à lista">
@@ -132,8 +170,14 @@
                     <span>Adicionar</span>
                 </button>
             </div>
-            <p class="dica" role="note">💡 Dica: Adicione o preço médio do produto para estimar o gasto total</p>
+            <p class="dica" role="note">💡 Dica: Digite o produto e veja sugestões de preço | Use o Modo Mercado para tela gigante</p>
         </div>
+    </div>
+
+    <!-- Toast para desfazer ações -->
+    <div id="undoToast" class="undo-toast" hidden>
+        <span id="undoMessage"></span>
+        <button id="undoButton">DESFAZER</button>
     </div>
 
     <!-- Anunciador para leitores de tela -->

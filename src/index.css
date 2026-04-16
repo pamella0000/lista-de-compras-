@@ -938,3 +938,361 @@ button,
         scroll-behavior: auto !important;
     }
 }
+/* ============================================ */
+/* NOVAS FUNCIONALIDADES - QUANTIDADE, FAB, MODO MERCADO, ETC */
+/* ============================================ */
+
+/* Botão flutuante (FAB) */
+.fab-button {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, var(--cor-primaria-2), var(--cor-primaria-3));
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.fab-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.fab-button:active {
+    transform: scale(0.95);
+}
+
+/* Header actions */
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-market-mode {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--cor-branco);
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-family: var(--fonte);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    backdrop-filter: blur(4px);
+}
+
+.btn-market-mode:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Modo Mercado - Interface gigante para usar no supermercado */
+.market-mode .app-container {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+}
+
+.market-mode .add-item-container {
+    display: none;
+}
+
+.market-mode .fab-button {
+    display: flex;
+    bottom: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+}
+
+.market-mode .shopping-list li {
+    padding: 20px 24px;
+    margin-bottom: 12px;
+}
+
+.market-mode .item-text {
+    font-size: 1.4rem;
+}
+
+.market-mode .item-checkbox {
+    width: 32px;
+    height: 32px;
+    transform: scale(1.2);
+}
+
+.market-mode .item-preco {
+    font-size: 1rem;
+}
+
+.market-mode .btn-edit,
+.market-mode .btn-delete {
+    padding: 12px;
+    font-size: 1.2rem;
+}
+
+.market-mode .stat-item span {
+    font-size: 2rem;
+}
+
+.market-mode .stat-item small {
+    font-size: 0.9rem;
+}
+
+.market-mode .header {
+    padding: 16px;
+}
+
+.market-mode .titulo {
+    font-size: 1rem;
+}
+
+.market-mode .subtitulo {
+    display: none;
+}
+
+/* Campo de quantidade */
+.quantity-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: var(--cor-branco);
+    border-left: 1px solid var(--cor-cinza-borda);
+    padding-left: 8px;
+}
+
+#quantidade {
+    width: 60px;
+    padding: 14px 4px;
+    border: none;
+    font-size: 0.9rem;
+    font-family: var(--fonte);
+    outline: none;
+    text-align: center;
+}
+
+#quantidade::placeholder {
+    font-size: 0.75rem;
+    color: #b9b9c8;
+}
+
+/* Exibição de quantidade no item */
+.item-quantidade {
+    font-size: 0.7rem;
+    color: var(--cor-cinza-texto);
+    margin-left: 8px;
+    font-weight: normal;
+}
+
+.item-quantidade i {
+    font-size: 0.65rem;
+    margin-right: 2px;
+}
+
+/* Autocomplete de sugestões */
+.autocomplete-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.sugestoes-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--cor-branco);
+    border: 1px solid var(--cor-cinza-borda);
+    border-radius: var(--raio-pequeno);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sugestao-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sugestao-item:hover {
+    background: var(--cor-cinza-claro);
+}
+
+.sugestao-nome {
+    font-weight: 500;
+}
+
+.sugestao-preco {
+    font-size: 0.8rem;
+    color: var(--cor-primaria-2);
+    font-weight: 600;
+}
+
+/* Barra de ações em massa */
+.bulk-actions-bar {
+    background: var(--cor-primaria-2);
+    color: white;
+    padding: 12px 16px;
+    border-radius: var(--raio-medio);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    animation: slideIn 0.3s ease;
+}
+
+.bulk-actions-bar button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.bulk-delete {
+    background: var(--cor-erro);
+    color: white;
+}
+
+.bulk-complete {
+    background: var(--cor-sucesso);
+    color: white;
+}
+
+.bulk-cancel {
+    background: var(--cor-cinza-claro);
+    color: var(--cor-texto);
+}
+
+/* Checkbox de seleção múltipla */
+.selection-checkbox {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--cor-primaria-2);
+}
+
+.selection-mode .item-actions {
+    display: none;
+}
+
+.selection-mode .item-checkbox {
+    display: none;
+}
+
+/* Toast para desfazer */
+.undo-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--cor-texto);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+}
+
+.undo-toast button {
+    background: var(--cor-primaria-2);
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Botão de seleção múltipla */
+.btn-select-multi {
+    background: transparent;
+    border: none;
+    color: var(--cor-primaria-2);
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.btn-select-multi:hover {
+    background: rgba(176, 34, 140, 0.1);
+}
+
+.btn-select-multi.ativo {
+    background: var(--cor-primaria-2);
+    color: white;
+}
+
+/* Responsividade para novas funcionalidades */
+@media (max-width: 600px) {
+    .quantity-input-wrapper {
+        display: none;
+    }
+    
+    .fab-button {
+        bottom: 80px;
+    }
+    
+    .market-mode .quantity-input-wrapper {
+        display: none;
+    }
+    
+    .market-mode .price-input-wrapper {
+        display: none;
+    }
+    
+    .market-mode .fab-button {
+        display: flex;
+    }
+    
+    .bulk-actions-bar {
+        justify-content: center;
+    }
+    
+    .undo-toast {
+        bottom: 80px;
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+}
