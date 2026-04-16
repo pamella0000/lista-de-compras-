@@ -30,7 +30,7 @@
             <p class="subtitulo">Compartilhada em tempo real</p>
         </header>
 
-        <!-- Estatísticas rápidas -->
+        <!-- Barra de estatísticas aprimorada -->
         <div class="stats-bar">
             <div class="stat-item">
                 <i class="fas fa-list-ul"></i>
@@ -47,20 +47,30 @@
                 <span id="itensPendentes">0</span>
                 <small>pendentes</small>
             </div>
+            <div class="stat-item destaque">
+                <i class="fas fa-dollar-sign"></i>
+                <span id="valorTotal">R$ 0,00</span>
+                <small>estimado</small>
+            </div>
         </div>
 
         <!-- Área da lista -->
         <div class="list-wrapper">
             <div class="list-header">
                 <h3><i class="fas fa-shopping-cart"></i> Meus itens</h3>
-                <button id="limparListaBtn" class="btn-clear" onclick="limparLista()">
-                    <i class="fas fa-trash-alt"></i>
-                    Limpar tudo
-                </button>
+                <div class="header-buttons">
+                    <button id="limparCompradosBtn" class="btn-clear" onclick="limparComprados()">
+                        <i class="fas fa-check-double"></i>
+                        <span>Limpar comprados</span>
+                    </button>
+                    <button id="limparListaBtn" class="btn-clear danger" onclick="limparLista()">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Limpar tudo</span>
+                    </button>
+                </div>
             </div>
 
             <ul id="lista" class="shopping-list">
-                <!-- Os itens serão inseridos dinamicamente via JS -->
                 <li class="empty-state">
                     <i class="fas fa-clipboard-list"></i>
                     <p>Sua lista está vazia</p>
@@ -69,19 +79,23 @@
             </ul>
         </div>
 
-        <!-- Área de adição de itens (fixa no mobile) -->
+        <!-- Área de adição de itens com preço -->
         <div class="add-item-container">
             <div class="add-item-wrapper">
                 <div class="input-icon">
                     <i class="fas fa-plus-circle"></i>
                 </div>
                 <input type="text" id="item" placeholder="Ex: Arroz, Leite, Café..." autocomplete="off">
+                <div class="price-input-wrapper">
+                    <span class="price-currency">R$</span>
+                    <input type="number" id="preco" placeholder="Preço" step="0.01" min="0">
+                </div>
                 <button id="adicionarBtn" class="btn-add" onclick="adicionarItem()">
                     <i class="fas fa-plus"></i>
                     <span>Adicionar</span>
                 </button>
             </div>
-            <p class="dica">Pressione Enter para adicionar rapidamente</p>
+            <p class="dica">💡 Dica: Adicione o preço médio do produto para estimar o gasto total</p>
         </div>
     </div>
 
