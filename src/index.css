@@ -78,7 +78,6 @@ body::before {
     overflow: hidden;
     position: relative;
     z-index: 1;
-    backdrop-filter: blur(0px);
 }
 
 /* Header */
@@ -179,6 +178,23 @@ body::before {
     font-weight: 500;
 }
 
+/* Estatística de valor em destaque */
+.stat-item.destaque {
+    background: linear-gradient(135deg, rgba(176, 34, 140, 0.1), rgba(234, 55, 136, 0.1));
+    border-radius: var(--raio-medio);
+    padding: 8px 4px;
+}
+
+.stat-item.destaque i {
+    color: var(--cor-primaria-2);
+    font-size: 1.2rem;
+}
+
+.stat-item.destaque span {
+    color: var(--cor-primaria-2);
+    font-size: 1.3rem;
+}
+
 /* Wrapper da lista */
 .list-wrapper {
     padding: 20px 20px 0 20px;
@@ -204,6 +220,12 @@ body::before {
     gap: 8px;
 }
 
+/* Header buttons */
+.header-buttons {
+    display: flex;
+    gap: 8px;
+}
+
 .btn-clear {
     background: transparent;
     border: none;
@@ -221,6 +243,34 @@ body::before {
 
 .btn-clear:hover {
     background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-clear.danger {
+    color: var(--cor-erro);
+}
+
+.btn-clear.danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* Botão Limpar Comprados específico */
+#limparCompradosBtn {
+    background: transparent;
+    border: none;
+    color: var(--cor-pendente);
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+#limparCompradosBtn:hover {
+    background: rgba(245, 158, 11, 0.1);
 }
 
 /* Lista de compras */
@@ -290,17 +340,48 @@ body::before {
     accent-color: var(--cor-primaria-2);
 }
 
+/* Detalhes do item com preço */
+.item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
 .item-text {
     font-size: 1rem;
     font-weight: 500;
     color: var(--cor-texto);
     word-break: break-word;
-    flex: 1;
 }
 
 .item-text.comprado {
     text-decoration: line-through;
     opacity: 0.6;
+}
+
+.item-preco {
+    font-size: 0.75rem;
+    color: var(--cor-primaria-2);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.item-preco i {
+    font-size: 0.7rem;
+}
+
+.item-preco.sem-preco {
+    color: var(--cor-cinza-texto);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.item-preco.sem-preco:hover {
+    color: var(--cor-primaria-2);
+    text-decoration: underline;
 }
 
 .item-actions {
@@ -312,10 +393,13 @@ body::before {
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 6px;
+    padding: 8px;
     border-radius: 8px;
     transition: var(--transition);
     font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-edit {
@@ -381,6 +465,36 @@ body::before {
     font-weight: 400;
 }
 
+/* Input de preço */
+.price-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: var(--cor-branco);
+    border-left: 1px solid var(--cor-cinza-borda);
+    padding-left: 8px;
+}
+
+.price-currency {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cor-primaria-2);
+    margin-right: 4px;
+}
+
+#preco {
+    width: 80px;
+    padding: 14px 4px;
+    border: none;
+    font-size: 0.9rem;
+    font-family: var(--fonte);
+    outline: none;
+}
+
+#preco::placeholder {
+    font-size: 0.75rem;
+    color: #b9b9c8;
+}
+
 .btn-add {
     background: linear-gradient(105deg, var(--cor-primaria-2), var(--cor-primaria-3));
     border: none;
@@ -425,91 +539,9 @@ body::before {
     border-radius: 10px;
 }
 
-/* Responsividade */
-@media (max-width: 600px) {
-    body {
-        padding: 12px;
-    }
-
-    .app-container {
-        border-radius: 20px;
-    }
-
-    .header {
-        padding: 18px 20px;
-    }
-
-    .titulo {
-        font-size: 1.2rem;
-    }
-
-    .logo-area i {
-        font-size: 22px;
-    }
-
-    .btn-logout span {
-        display: none;
-    }
-
-    .btn-logout i {
-        margin: 0;
-        font-size: 1.2rem;
-    }
-
-    .btn-logout {
-        padding: 8px 12px;
-    }
-
-    .stats-bar {
-        padding: 12px 16px;
-    }
-
-    .stat-item span {
-        font-size: 1.3rem;
-    }
-
-    .list-wrapper {
-        padding: 16px 16px 0 16px;
-        max-height: 50vh;
-    }
-
-    .add-item-container {
-        padding: 16px;
-    }
-
-    .btn-add span {
-        display: none;
-    }
-
-    .btn-add i {
-        margin: 0;
-        font-size: 1.2rem;
-    }
-
-    .btn-add {
-        padding: 10px 14px;
-    }
-
-    .item-text {
-        font-size: 0.9rem;
-    }
-}
-
-/* Animações para itens */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.shopping-list li {
-    animation: slideIn 0.2s ease;
-}/* Notificações estilo toast */
+/* ============================================ */
+/* NOTIFICAÇÕES */
+/* ============================================ */
 .notificacao {
     position: fixed;
     bottom: 30px;
@@ -556,167 +588,8 @@ body::before {
     font-size: 1.1rem;
 }
 
-/* Ajuste para o botão Limpar Comprados */
-#limparCompradosBtn {
-    background: transparent;
-    border: none;
-    color: var(--cor-pendente);
-    font-size: 0.75rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    transition: var(--transition);
-    font-weight: 500;
-}
-
-#limparCompradosBtn:hover {
-    background: rgba(245, 158, 11, 0.1);
-}
-
-/* Melhorias nos botões de ação */
-.btn-edit, .btn-delete {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 8px;
-    transition: var(--transition);
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Responsividade para notificações */
-@media (max-width: 600px) {
-    .notificacao {
-        bottom: 20px;
-        padding: 10px 18px;
-        font-size: 0.8rem;
-    }
-}/* Estatística de valor em destaque */
-.stat-item.destaque {
-    background: linear-gradient(135deg, rgba(176, 34, 140, 0.1), rgba(234, 55, 136, 0.1));
-    border-radius: var(--raio-medio);
-    padding: 8px 4px;
-}
-
-.stat-item.destaque i {
-    color: var(--cor-primaria-2);
-    font-size: 1.2rem;
-}
-
-.stat-item.destaque span {
-    color: var(--cor-primaria-2);
-    font-size: 1.3rem;
-}
-
-/* Input de preço */
-.price-input-wrapper {
-    display: flex;
-    align-items: center;
-    background: var(--cor-branco);
-    border-left: 1px solid var(--cor-cinza-borda);
-    padding-left: 8px;
-}
-
-.price-currency {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--cor-primaria-2);
-    margin-right: 4px;
-}
-
-#preco {
-    width: 80px;
-    padding: 14px 4px;
-    border: none;
-    font-size: 0.9rem;
-    font-family: var(--fonte);
-    outline: none;
-}
-
-#preco::placeholder {
-    font-size: 0.75rem;
-    color: #b9b9c8;
-}
-
-/* Detalhes do item com preço */
-.item-details {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-}
-
-.item-preco {
-    font-size: 0.75rem;
-    color: var(--cor-primaria-2);
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.item-preco i {
-    font-size: 0.7rem;
-}
-
-.item-preco.sem-preco {
-    color: var(--cor-cinza-texto);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.item-preco.sem-preco:hover {
-    color: var(--cor-primaria-2);
-    text-decoration: underline;
-}
-
-/* Header buttons */
-.header-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-clear.danger {
-    color: var(--cor-erro);
-}
-
-.btn-clear.danger:hover {
-    background: rgba(239, 68, 68, 0.1);
-}
-
-/* Responsividade para preços */
-@media (max-width: 600px) {
-    .price-input-wrapper {
-        display: none;
-    }
-    
-    .add-item-wrapper {
-        padding: 4px 4px 4px 16px;
-    }
-    
-    .stat-item.destaque span {
-        font-size: 1rem;
-    }
-    
-    .stat-item.destaque i {
-        font-size: 1rem;
-    }
-    
-    .header-buttons span {
-        display: none;
-    }
-    
-    .btn-clear i {
-        margin: 0;
-    }
-}/* ============================================ */
-/* ACESSIBILIDADE - MELHORIAS PARA TODOS OS PÚBLICOS */
+/* ============================================ */
+/* ACESSIBILIDADE */
 /* ============================================ */
 
 /* Skip to content link */
@@ -825,7 +698,6 @@ body::before {
 }
 
 /* Classes de acessibilidade dinâmicas */
-/* Alto Contraste */
 .high-contrast {
     filter: contrast(1.5);
 }
@@ -876,7 +748,7 @@ body::before {
     font-size: 1.5rem !important;
 }
 
-/* Modo leitor (remove decorações, foca no conteúdo) */
+/* Modo leitor */
 .reader-mode * {
     background: white !important;
     color: black !important;
@@ -904,29 +776,11 @@ body::before {
     border-radius: 4px !important;
 }
 
-/* Melhorias para leitores de tela */
-[aria-live="polite"] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-
-/* Indicadores visuais para foco */
 button:focus-visible,
 input:focus-visible,
 a:focus-visible {
     outline: 3px solid var(--cor-primaria-2);
     outline-offset: 2px;
-}
-
-/* Melhorar contraste para textos */
-.item-text {
-    color: var(--cor-texto);
 }
 
 /* Garantir que elementos clicáveis tenham tamanho adequado */
@@ -941,8 +795,123 @@ button,
     min-width: 44px;
 }
 
-/* Responsividade para mobile no menu de acessibilidade */
+/* Animações para itens */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.shopping-list li {
+    animation: slideIn 0.2s ease;
+}
+
+/* ============================================ */
+/* RESPONSIVIDADE */
+/* ============================================ */
 @media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .app-container {
+        border-radius: 20px;
+    }
+
+    .header {
+        padding: 18px 20px;
+    }
+
+    .titulo {
+        font-size: 1.2rem;
+    }
+
+    .logo-area i {
+        font-size: 22px;
+    }
+
+    .btn-logout span {
+        display: none;
+    }
+
+    .btn-logout i {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .btn-logout {
+        padding: 8px 12px;
+    }
+
+    .stats-bar {
+        padding: 12px 16px;
+    }
+
+    .stat-item span {
+        font-size: 1.3rem;
+    }
+
+    .stat-item.destaque span {
+        font-size: 1rem;
+    }
+    
+    .stat-item.destaque i {
+        font-size: 1rem;
+    }
+
+    .list-wrapper {
+        padding: 16px 16px 0 16px;
+        max-height: 50vh;
+    }
+
+    .add-item-container {
+        padding: 16px;
+    }
+
+    .price-input-wrapper {
+        display: none;
+    }
+    
+    .add-item-wrapper {
+        padding: 4px 4px 4px 16px;
+    }
+
+    .btn-add span {
+        display: none;
+    }
+
+    .btn-add i {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .btn-add {
+        padding: 10px 14px;
+    }
+
+    .item-text {
+        font-size: 0.9rem;
+    }
+    
+    .header-buttons span {
+        display: none;
+    }
+    
+    .btn-clear i {
+        margin: 0;
+    }
+
+    .notificacao {
+        bottom: 20px;
+        padding: 10px 18px;
+        font-size: 0.8rem;
+    }
+
     .accessibility-btn .btn-text {
         display: none;
     }
@@ -968,71 +937,4 @@ button,
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
-}/* Garantir que preços sejam exibidos corretamente */
-.item-preco {
-    font-size: 0.75rem;
-    color: var(--cor-primaria-2);
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 2px;
 }
-
-.item-preco i {
-    font-size: 0.7rem;
-}
-
-.item-preco.sem-preco {
-    color: var(--cor-cinza-texto);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.item-preco.sem-preco:hover {
-    color: var(--cor-primaria-2);
-    text-decoration: underline;
-}
-
-.item-details {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-}
-
-/* Estatística de valor em destaque */
-.stat-item.destaque {
-    background: linear-gradient(135deg, rgba(176, 34, 140, 0.1), rgba(234, 55, 136, 0.1));
-    border-radius: var(--raio-medio);
-    padding: 8px 4px;
-}
-
-.stat-item.destaque span {
-    color: var(--cor-primaria-2);
-    font-weight: 700;
-}
-
-/* Input de preço */
-.price-input-wrapper {
-    display: flex;
-    align-items: center;
-    background: var(--cor-branco);
-    border-left: 1px solid var(--cor-cinza-borda);
-    padding-left: 8px;
-}
-
-.price-currency {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--cor-primaria-2);
-    margin-right: 4px;
-}
-
-#preco {
-    width: 80px;
-    padding: 14px 4px;
-    border: none;
-    font-size: 0.9rem;
-    font-family: var(--fonte);
-    outline: none;
