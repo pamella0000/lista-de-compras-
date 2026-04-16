@@ -1,6 +1,7 @@
-// Banco de dados de preços médios por produto (simulando uma API)
+// ============================================
+// BANCO DE DADOS DE PREÇOS MÉDIOS
+// ============================================
 const precosMedios = {
-    // Alimentos básicos
     'arroz': 25.90,
     'feijão': 8.50,
     'feijao': 8.50,
@@ -15,8 +16,6 @@ const precosMedios = {
     'oleo': 7.90,
     'farinha': 4.90,
     'sal': 2.50,
-    
-    // Proteínas
     'frango': 22.90,
     'carne': 45.90,
     'bovina': 45.90,
@@ -24,8 +23,6 @@ const precosMedios = {
     'peixe': 35.90,
     'ovo': 12.90,
     'ovos': 12.90,
-    
-    // Hortifrúti
     'banana': 5.90,
     'maçã': 8.90,
     'maca': 8.90,
@@ -35,24 +32,16 @@ const precosMedios = {
     'cebola': 5.90,
     'batata': 4.90,
     'cenoura': 3.90,
-    
-    // Bebidas
     'refrigerante': 8.90,
     'suco': 6.90,
     'água': 2.50,
     'agua': 2.50,
     'cerveja': 4.90,
-    
-    // Limpeza
     'detergente': 2.50,
     'sabão': 3.50,
     'sabao': 3.50,
     'amaciante': 12.90,
-    'água sanitária': 4.90,
-    'agua sanitaria': 4.90,
     'desinfetante': 6.90,
-    
-    // Higiene
     'shampoo': 15.90,
     'condicionador': 15.90,
     'sabonete': 2.50,
@@ -63,7 +52,9 @@ const precosMedios = {
     'absorvente': 12.90
 };
 
-// Função para sugerir preço baseado no nome do produto
+// ============================================
+// FUNÇÕES DE PREÇO
+// ============================================
 function sugerirPrecoPorProduto(nomeProduto) {
     const nomeLower = nomeProduto.toLowerCase().trim();
     
@@ -79,19 +70,36 @@ function sugerirPrecoPorProduto(nomeProduto) {
         }
     }
     
-    // Retornar null se não encontrar sugestão
     return null;
 }
 
+function calcularValorTotal() {
+    const total = listaDeCompras.reduce((soma, item) => {
+        // Só soma preços de itens NÃO comprados que têm preço definido
+        if (!item.comprado && item.preco && typeof item.preco === 'number' && !isNaN(item.preco)) {
+            return soma + item.preco;
+        }
+        return soma;
+    }, 0);
+    return total;
+}
+
+// ============================================
+// DADOS E PERSISTÊNCIA
+// ============================================
 let listaDeCompras = [];
 
-// Carregar dados do localStorage ao iniciar
 function carregarDados() {
     const dadosSalvos = localStorage.getItem('listaCompras');
     if (dadosSalvos) {
         listaDeCompras = JSON.parse(dadosSalvos);
+        // Garantir que todos os itens tenham a estrutura correta
+        listaDeCompras = listaDeCompras.map(item => ({
+            ...item,
+            preco: item.preco !== undefined && item.preco !== null ? parseFloat(item.preco) : null,
+            comprado: item.comprado || false
+        }));
     } else {
-        // Dados de exemplo para demonstração
         listaDeCompras = [
             { id: '1', texto: 'Arroz', preco: 25.90, comprado: false },
             { id: '2', texto: 'Feijão', preco: 8.50, comprado: false },
@@ -103,12 +111,13 @@ function carregarDados() {
     atualizarEstatisticas();
 }
 
-// Salvar dados no localStorage
 function salvarDados() {
     localStorage.setItem('listaCompras', JSON.stringify(listaDeCompras));
 }
 
-// Adicionar novo item com preço
+// ============================================
+// CRUD DE ITENS
+// ============================================
 function adicionarItem() {
     const input = document.getElementById('item');
     const inputPreco = document.getElementById('preco');
@@ -120,7 +129,7 @@ function adicionarItem() {
         return;
     }
     
-    // Se o preço não foi informado, tentar sugerir
+    // Se o preço não foi informado ou é inválido, tentar sugerir
     if (isNaN(preco) || preco <= 0) {
         const precoSugerido = sugerirPrecoPorProduto(texto);
         if (precoSugerido) {
@@ -149,9 +158,9 @@ function adicionarItem() {
     input.focus();
     
     mostrarNotificacao(`"${texto}" adicionado à lista!`, 'sucesso');
+    anunciarAcao(`Item ${texto} adicionado à lista`);
 }
 
-// Alternar status comprado/não comprado
 function toggleComprado(id) {
     const item = listaDeCompras.find(item => item.id === id);
     if (item) {
@@ -162,19 +171,19 @@ function toggleComprado(id) {
         
         const status = item.comprado ? 'marcado como comprado' : 'marcado como pendente';
         mostrarNotificacao(`"${item.texto}" ${status}!`, 'info');
+        anunciarAcao(`${item.texto} ${status}`);
     }
 }
 
-// Editar item (incluindo preço)
 function editarItem(id) {
     const item = listaDeCompras.find(item => item.id === id);
     if (!item) return;
     
     const novoTexto = prompt('Editar nome do item:', item.texto);
     if (novoTexto && novoTexto.trim() !== '') {
+        const textoAntigo = item.texto;
         item.texto = novoTexto.trim();
         
-        // Perguntar se quer editar o preço
         const editarPreco = confirm('Deseja editar o preço também?');
         if (editarPreco) {
             const novoPreco = prompt('Digite o novo preço (R$):', item.preco || '');
@@ -186,26 +195,32 @@ function editarItem(id) {
         salvarDados();
         renderizarLista();
         atualizarEstatisticas();
-        mostrarNotificacao(`"${item.texto}" atualizado!`, 'sucesso');
+        mostrarNotificacao(`"${textoAntigo}" atualizado para "${item.texto}"`, 'sucesso');
+        anunciarAcao(`Item atualizado para ${item.texto}`);
     }
 }
 
-// Editar apenas o preço do item
 function editarPreco(id) {
     const item = listaDeCompras.find(item => item.id === id);
     if (!item) return;
     
     const novoPreco = prompt(`Digite o preço médio de "${item.texto}":`, item.preco || '');
     if (novoPreco !== null && !isNaN(parseFloat(novoPreco))) {
+        const precoAntigo = item.preco;
         item.preco = parseFloat(novoPreco) || null;
         salvarDados();
         renderizarLista();
         atualizarEstatisticas();
-        mostrarNotificacao(`Preço de "${item.texto}" atualizado para R$ ${(item.preco || 0).toFixed(2)}`, 'sucesso');
+        
+        if (item.preco) {
+            mostrarNotificacao(`Preço de "${item.texto}" atualizado para R$ ${item.preco.toFixed(2)}`, 'sucesso');
+            anunciarAcao(`Preço de ${item.texto} atualizado para ${item.preco.toFixed(2)} reais`);
+        } else {
+            mostrarNotificacao(`Preço de "${item.texto}" removido`, 'info');
+        }
     }
 }
 
-// Remover item individual
 function removerItem(id) {
     const item = listaDeCompras.find(item => item.id === id);
     if (item && confirm(`Deseja remover "${item.texto}" da lista?`)) {
@@ -214,10 +229,10 @@ function removerItem(id) {
         renderizarLista();
         atualizarEstatisticas();
         mostrarNotificacao(`"${item.texto}" removido da lista!`, 'sucesso');
+        anunciarAcao(`${item.texto} removido da lista`);
     }
 }
 
-// Limpar todos os itens
 function limparLista() {
     const totalItens = listaDeCompras.length;
     
@@ -232,10 +247,10 @@ function limparLista() {
         renderizarLista();
         atualizarEstatisticas();
         mostrarNotificacao('Lista limpa com sucesso!', 'sucesso');
+        anunciarAcao('Todos os itens foram removidos da lista');
     }
 }
 
-// Remover apenas itens comprados
 function limparComprados() {
     const comprados = listaDeCompras.filter(item => item.comprado);
     
@@ -250,24 +265,16 @@ function limparComprados() {
         renderizarLista();
         atualizarEstatisticas();
         mostrarNotificacao(`${comprados.length} item(ns) comprados removido(s)!`, 'sucesso');
+        anunciarAcao(`${comprados.length} itens comprados foram removidos`);
     }
 }
 
-// Calcular valor total da lista
-function calcularValorTotal() {
-    const total = listaDeCompras.reduce((soma, item) => {
-        if (item.preco && !item.comprado) {
-            return soma + item.preco;
-        }
-        return soma;
-    }, 0);
-    return total;
-}
-
-// Atualizar estatísticas (total, comprados, pendentes, valor total)
+// ============================================
+// ATUALIZAÇÃO DE ESTATÍSTICAS (CORRIGIDA)
+// ============================================
 function atualizarEstatisticas() {
     const total = listaDeCompras.length;
-    const comprados = listaDeCompras.filter(item => item.comprado).length;
+    const comprados = listaDeCompras.filter(item => item.comprado === true).length;
     const pendentes = total - comprados;
     const valorTotal = calcularValorTotal();
     
@@ -280,9 +287,14 @@ function atualizarEstatisticas() {
     if (compradosElement) compradosElement.textContent = comprados;
     if (pendentesElement) pendentesElement.textContent = pendentes;
     if (valorTotalElement) valorTotalElement.textContent = `R$ ${valorTotal.toFixed(2)}`;
+    
+    // Debug (opcional - remover em produção)
+    console.log('Estatísticas atualizadas:', { total, comprados, pendentes, valorTotal });
 }
 
-// Renderizar lista no HTML
+// ============================================
+// RENDERIZAÇÃO DA LISTA
+// ============================================
 function renderizarLista() {
     const listaElement = document.getElementById('lista');
     
@@ -290,8 +302,8 @@ function renderizarLista() {
     
     if (listaDeCompras.length === 0) {
         listaElement.innerHTML = `
-            <li class="empty-state">
-                <i class="fas fa-clipboard-list"></i>
+            <li class="empty-state" role="status">
+                <i class="fas fa-clipboard-list" aria-hidden="true"></i>
                 <p>Sua lista está vazia</p>
                 <small>Adicione itens abaixo</small>
             </li>
@@ -306,49 +318,51 @@ function renderizarLista() {
     });
     
     listaElement.innerHTML = itensOrdenados.map(item => `
-        <li data-id="${item.id}">
+        <li data-id="${item.id}" role="listitem">
             <div class="item-content">
                 <input 
                     type="checkbox" 
                     class="item-checkbox" 
                     ${item.comprado ? 'checked' : ''}
                     onchange="toggleComprado('${item.id}')"
+                    aria-label="${item.comprado ? `Desmarcar ${escapeHtml(item.texto)} como comprado` : `Marcar ${escapeHtml(item.texto)} como comprado`}"
                 >
                 <div class="item-details">
                     <span class="item-text ${item.comprado ? 'comprado' : ''}">${escapeHtml(item.texto)}</span>
-                    ${item.preco ? `
-                        <span class="item-preco">
-                            <i class="fas fa-tag"></i>
+                    ${item.preco && typeof item.preco === 'number' && !isNaN(item.preco) ? `
+                        <span class="item-preco" aria-label="Preço: ${item.preco.toFixed(2)} reais">
+                            <i class="fas fa-tag" aria-hidden="true"></i>
                             R$ ${item.preco.toFixed(2)}
                         </span>
                     ` : `
-                        <span class="item-preco sem-preco" onclick="editarPreco('${item.id}')">
-                            <i class="fas fa-plus-circle"></i>
+                        <span class="item-preco sem-preco" onclick="editarPreco('${item.id}')" role="button" tabindex="0" aria-label="Adicionar preço para ${escapeHtml(item.texto)}">
+                            <i class="fas fa-plus-circle" aria-hidden="true"></i>
                             Adicionar preço
                         </span>
                     `}
                 </div>
             </div>
             <div class="item-actions">
-                <button class="btn-edit" onclick="editarItem('${item.id}')" title="Editar">
-                    <i class="fas fa-edit"></i>
+                <button class="btn-edit" onclick="editarItem('${item.id}')" aria-label="Editar ${escapeHtml(item.texto)}">
+                    <i class="fas fa-edit" aria-hidden="true"></i>
                 </button>
-                <button class="btn-delete" onclick="removerItem('${item.id}')" title="Remover">
-                    <i class="fas fa-trash-alt"></i>
+                <button class="btn-delete" onclick="removerItem('${item.id}')" aria-label="Remover ${escapeHtml(item.texto)}">
+                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
                 </button>
             </div>
         </li>
     `).join('');
 }
 
-// Função para escapar HTML (segurança)
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-// Mostrar notificações temporárias
+// ============================================
+// NOTIFICAÇÕES E UI
+// ============================================
 function mostrarNotificacao(mensagem, tipo = 'info') {
     const notificacao = document.createElement('div');
     notificacao.className = `notificacao notificacao-${tipo}`;
@@ -360,7 +374,7 @@ function mostrarNotificacao(mensagem, tipo = 'info') {
     };
     
     notificacao.innerHTML = `
-        <i class="fas ${icones[tipo]}"></i>
+        <i class="fas ${icones[tipo]}" aria-hidden="true"></i>
         <span>${mensagem}</span>
     `;
     
@@ -378,7 +392,6 @@ function mostrarNotificacao(mensagem, tipo = 'info') {
     }, 3000);
 }
 
-// Logout
 function logout() {
     if (confirm('Deseja realmente sair?')) {
         mostrarNotificacao('Saindo...', 'info');
@@ -388,7 +401,6 @@ function logout() {
     }
 }
 
-// Configurar evento de tecla Enter no campo de input
 function configurarEventoEnter() {
     const input = document.getElementById('item');
     const inputPreco = document.getElementById('preco');
@@ -412,24 +424,9 @@ function configurarEventoEnter() {
     }
 }
 
-// Exportar funções para o escopo global
-window.adicionarItem = adicionarItem;
-window.toggleComprado = toggleComprado;
-window.editarItem = editarItem;
-window.editarPreco = editarPreco;
-window.removerItem = removerItem;
-window.limparLista = limparLista;
-window.limparComprados = limparComprados;
-window.logout = logout;
-
-// Inicializar aplicação
-document.addEventListener('DOMContentLoaded', () => {
-    carregarDados();
-    configurarEventoEnter();
-});// ============================================
-// MÓDULO DE ACESSIBILIDADE
 // ============================================
-
+// ACESSIBILIDADE
+// ============================================
 class AcessibilidadeManager {
     constructor() {
         this.fontSize = localStorage.getItem('fontSize') || 'normal';
@@ -442,23 +439,19 @@ class AcessibilidadeManager {
         this.aplicarConfiguracoes();
         this.configurarBotoes();
         this.configurarTeclado();
-        this.configurarAnunciador();
     }
     
     aplicarConfiguracoes() {
-        // Aplicar tamanho de fonte
         if (this.fontSize === 'large') {
             document.body.classList.add('font-large');
         } else if (this.fontSize === 'xlarge') {
             document.body.classList.add('font-xlarge');
         }
         
-        // Aplicar alto contraste
         if (this.highContrast) {
             document.body.classList.add('high-contrast');
         }
         
-        // Aplicar modo leitor
         if (this.readerMode) {
             document.body.classList.add('reader-mode');
         }
@@ -493,7 +486,6 @@ class AcessibilidadeManager {
             resetBtn.addEventListener('click', () => this.resetar());
         }
         
-        // Toggle do menu de acessibilidade
         if (accessBtn && accessPanel) {
             accessBtn.addEventListener('click', () => {
                 const expanded = accessBtn.getAttribute('aria-expanded') === 'true';
@@ -501,7 +493,6 @@ class AcessibilidadeManager {
                 accessPanel.hidden = expanded;
             });
             
-            // Fechar menu ao clicar fora
             document.addEventListener('click', (e) => {
                 if (!accessBtn.contains(e.target) && !accessPanel.contains(e.target)) {
                     accessPanel.hidden = true;
@@ -512,17 +503,12 @@ class AcessibilidadeManager {
     }
     
     configurarTeclado() {
-        // Navegação por teclado para a lista
         document.addEventListener('keydown', (e) => {
-            // Ctrl + Enter para adicionar item
             if (e.ctrlKey && e.key === 'Enter') {
                 e.preventDefault();
-                if (typeof adicionarItem === 'function') {
-                    adicionarItem();
-                }
+                adicionarItem();
             }
             
-            // Escape para fechar menus
             if (e.key === 'Escape') {
                 const accessPanel = document.getElementById('accessibilityPanel');
                 const accessBtn = document.getElementById('accessibilityBtn');
@@ -532,11 +518,6 @@ class AcessibilidadeManager {
                 }
             }
         });
-    }
-    
-    configurarAnunciador() {
-        // Anunciar ações importantes para leitores de tela
-        this.announce('Aplicativo de lista de compras carregado. Use os botões para navegar.');
     }
     
     announce(message) {
@@ -597,7 +578,7 @@ class AcessibilidadeManager {
         this.readerMode = !this.readerMode;
         if (this.readerMode) {
             document.body.classList.add('reader-mode');
-            this.announce('Modo leitor ativado. Interface simplificada para melhor leitura.');
+            this.announce('Modo leitor ativado');
         } else {
             document.body.classList.remove('reader-mode');
             this.announce('Modo leitor desativado');
@@ -616,35 +597,40 @@ class AcessibilidadeManager {
         localStorage.removeItem('highContrast');
         localStorage.removeItem('readerMode');
         
-        this.announce('Configurações de acessibilidade resetadas. Interface restaurada ao padrão.');
+        this.announce('Configurações de acessibilidade resetadas');
         
-        // Recarregar página para garantir consistência
         setTimeout(() => {
             window.location.reload();
         }, 1500);
     }
 }
 
-// Inicializar acessibilidade
-let accessibilityManager;
-document.addEventListener('DOMContentLoaded', () => {
-    accessibilityManager = new AcessibilidadeManager();
-});
-
-// Função para anunciar ações (será chamada pelo app principal)
 function anunciarAcao(mensagem) {
     if (accessibilityManager) {
         accessibilityManager.announce(mensagem);
     }
 }
 
-// Sobrescrever mostrarNotificacao para também anunciar
-const originalMostrarNotificacao = window.mostrarNotificacao;
-window.mostrarNotificacao = function(mensagem, tipo = 'info') {
-    if (originalMostrarNotificacao) {
-        originalMostrarNotificacao(mensagem, tipo);
-    }
-    if (accessibilityManager && tipo !== 'erro') {
-        accessibilityManager.announce(mensagem);
-    }
-};
+// ============================================
+// EXPORTAÇÃO DAS FUNÇÕES GLOBAIS
+// ============================================
+window.adicionarItem = adicionarItem;
+window.toggleComprado = toggleComprado;
+window.editarItem = editarItem;
+window.editarPreco = editarPreco;
+window.removerItem = removerItem;
+window.limparLista = limparLista;
+window.limparComprados = limparComprados;
+window.logout = logout;
+window.mostrarNotificacao = mostrarNotificacao;
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+let accessibilityManager;
+
+document.addEventListener('DOMContentLoaded', () => {
+    carregarDados();
+    configurarEventoEnter();
+    accessibilityManager = new AcessibilidadeManager();
+});
