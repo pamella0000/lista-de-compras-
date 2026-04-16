@@ -375,4 +375,7 @@ function configurarAutocomplete() {
                         <span class="sugestao-preco">R$ ${sug.preco.toFixed(2)}</span>
                     </div>
                 `).join('');
-               
+            }
+        }, 300);
+    });
+}
