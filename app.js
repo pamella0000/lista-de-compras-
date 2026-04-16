@@ -426,4 +426,225 @@ window.logout = logout;
 document.addEventListener('DOMContentLoaded', () => {
     carregarDados();
     configurarEventoEnter();
+});// ============================================
+// MÓDULO DE ACESSIBILIDADE
+// ============================================
+
+class AcessibilidadeManager {
+    constructor() {
+        this.fontSize = localStorage.getItem('fontSize') || 'normal';
+        this.highContrast = localStorage.getItem('highContrast') === 'true';
+        this.readerMode = localStorage.getItem('readerMode') === 'true';
+        this.init();
+    }
+    
+    init() {
+        this.aplicarConfiguracoes();
+        this.configurarBotoes();
+        this.configurarTeclado();
+        this.configurarAnunciador();
+    }
+    
+    aplicarConfiguracoes() {
+        // Aplicar tamanho de fonte
+        if (this.fontSize === 'large') {
+            document.body.classList.add('font-large');
+        } else if (this.fontSize === 'xlarge') {
+            document.body.classList.add('font-xlarge');
+        }
+        
+        // Aplicar alto contraste
+        if (this.highContrast) {
+            document.body.classList.add('high-contrast');
+        }
+        
+        // Aplicar modo leitor
+        if (this.readerMode) {
+            document.body.classList.add('reader-mode');
+        }
+    }
+    
+    configurarBotoes() {
+        const aumentarFonte = document.getElementById('aumentarFonte');
+        const diminuirFonte = document.getElementById('diminuirFonte');
+        const altoContraste = document.getElementById('altoContraste');
+        const leitorTela = document.getElementById('leitorTela');
+        const resetBtn = document.getElementById('resetAcessibilidade');
+        const accessBtn = document.getElementById('accessibilityBtn');
+        const accessPanel = document.getElementById('accessibilityPanel');
+        
+        if (aumentarFonte) {
+            aumentarFonte.addEventListener('click', () => this.aumentarFonte());
+        }
+        
+        if (diminuirFonte) {
+            diminuirFonte.addEventListener('click', () => this.diminuirFonte());
+        }
+        
+        if (altoContraste) {
+            altoContraste.addEventListener('click', () => this.toggleHighContrast());
+        }
+        
+        if (leitorTela) {
+            leitorTela.addEventListener('click', () => this.toggleReaderMode());
+        }
+        
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.resetar());
+        }
+        
+        // Toggle do menu de acessibilidade
+        if (accessBtn && accessPanel) {
+            accessBtn.addEventListener('click', () => {
+                const expanded = accessBtn.getAttribute('aria-expanded') === 'true';
+                accessBtn.setAttribute('aria-expanded', !expanded);
+                accessPanel.hidden = expanded;
+            });
+            
+            // Fechar menu ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (!accessBtn.contains(e.target) && !accessPanel.contains(e.target)) {
+                    accessPanel.hidden = true;
+                    accessBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    }
+    
+    configurarTeclado() {
+        // Navegação por teclado para a lista
+        document.addEventListener('keydown', (e) => {
+            // Ctrl + Enter para adicionar item
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                if (typeof adicionarItem === 'function') {
+                    adicionarItem();
+                }
+            }
+            
+            // Escape para fechar menus
+            if (e.key === 'Escape') {
+                const accessPanel = document.getElementById('accessibilityPanel');
+                const accessBtn = document.getElementById('accessibilityBtn');
+                if (accessPanel && !accessPanel.hidden) {
+                    accessPanel.hidden = true;
+                    accessBtn.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+    }
+    
+    configurarAnunciador() {
+        // Anunciar ações importantes para leitores de tela
+        this.announce('Aplicativo de lista de compras carregado. Use os botões para navegar.');
+    }
+    
+    announce(message) {
+        const liveRegion = document.getElementById('liveRegion');
+        if (liveRegion) {
+            liveRegion.textContent = message;
+            setTimeout(() => {
+                liveRegion.textContent = '';
+            }, 3000);
+        }
+    }
+    
+    aumentarFonte() {
+        if (this.fontSize === 'normal') {
+            this.fontSize = 'large';
+            document.body.classList.add('font-large');
+            this.announce('Tamanho da fonte aumentado para grande');
+        } else if (this.fontSize === 'large') {
+            this.fontSize = 'xlarge';
+            document.body.classList.remove('font-large');
+            document.body.classList.add('font-xlarge');
+            this.announce('Tamanho da fonte aumentado para muito grande');
+        } else {
+            this.announce('Tamanho máximo da fonte atingido');
+        }
+        localStorage.setItem('fontSize', this.fontSize);
+    }
+    
+    diminuirFonte() {
+        if (this.fontSize === 'xlarge') {
+            this.fontSize = 'large';
+            document.body.classList.remove('font-xlarge');
+            document.body.classList.add('font-large');
+            this.announce('Tamanho da fonte reduzido para grande');
+        } else if (this.fontSize === 'large') {
+            this.fontSize = 'normal';
+            document.body.classList.remove('font-large');
+            this.announce('Tamanho da fonte reduzido para normal');
+        } else {
+            this.announce('Tamanho mínimo da fonte atingido');
+        }
+        localStorage.setItem('fontSize', this.fontSize);
+    }
+    
+    toggleHighContrast() {
+        this.highContrast = !this.highContrast;
+        if (this.highContrast) {
+            document.body.classList.add('high-contrast');
+            this.announce('Modo de alto contraste ativado');
+        } else {
+            document.body.classList.remove('high-contrast');
+            this.announce('Modo de alto contraste desativado');
+        }
+        localStorage.setItem('highContrast', this.highContrast);
+    }
+    
+    toggleReaderMode() {
+        this.readerMode = !this.readerMode;
+        if (this.readerMode) {
+            document.body.classList.add('reader-mode');
+            this.announce('Modo leitor ativado. Interface simplificada para melhor leitura.');
+        } else {
+            document.body.classList.remove('reader-mode');
+            this.announce('Modo leitor desativado');
+        }
+        localStorage.setItem('readerMode', this.readerMode);
+    }
+    
+    resetar() {
+        this.fontSize = 'normal';
+        this.highContrast = false;
+        this.readerMode = false;
+        
+        document.body.classList.remove('font-large', 'font-xlarge', 'high-contrast', 'reader-mode');
+        
+        localStorage.removeItem('fontSize');
+        localStorage.removeItem('highContrast');
+        localStorage.removeItem('readerMode');
+        
+        this.announce('Configurações de acessibilidade resetadas. Interface restaurada ao padrão.');
+        
+        // Recarregar página para garantir consistência
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+    }
+}
+
+// Inicializar acessibilidade
+let accessibilityManager;
+document.addEventListener('DOMContentLoaded', () => {
+    accessibilityManager = new AcessibilidadeManager();
 });
+
+// Função para anunciar ações (será chamada pelo app principal)
+function anunciarAcao(mensagem) {
+    if (accessibilityManager) {
+        accessibilityManager.announce(mensagem);
+    }
+}
+
+// Sobrescrever mostrarNotificacao para também anunciar
+const originalMostrarNotificacao = window.mostrarNotificacao;
+window.mostrarNotificacao = function(mensagem, tipo = 'info') {
+    if (originalMostrarNotificacao) {
+        originalMostrarNotificacao(mensagem, tipo);
+    }
+    if (accessibilityManager && tipo !== 'erro') {
+        accessibilityManager.announce(mensagem);
+    }
+};

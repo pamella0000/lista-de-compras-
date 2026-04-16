@@ -288,3 +288,257 @@ button {
         padding: 12px 0;
     }
 }
+/* ============================================ */
+/* ACESSIBILIDADE - MELHORIAS PARA TODOS OS PÚBLICOS */
+/* ============================================ */
+
+/* Skip to content link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--cor-primaria-2);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 1000;
+    font-weight: 600;
+    border-radius: 0 0 8px 0;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* Classe para esconder visualmente mas manter para leitores de tela */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Menu de acessibilidade flutuante */
+.accessibility-menu {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.accessibility-btn {
+    background: var(--cor-primaria-2);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: var(--fonte);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.accessibility-btn:hover {
+    transform: scale(1.05);
+    background: var(--cor-primaria-3);
+}
+
+.accessibility-panel {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    background: var(--cor-branco);
+    border-radius: var(--raio-medio);
+    padding: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid var(--cor-cinza-borda);
+}
+
+.accessibility-panel h3 {
+    font-size: 0.9rem;
+    margin: 0 0 8px 0;
+    color: var(--cor-texto);
+    text-align: center;
+}
+
+.accessibility-panel button {
+    background: var(--cor-cinza-claro);
+    border: 1px solid var(--cor-cinza-borda);
+    padding: 8px 12px;
+    border-radius: var(--raio-pequeno);
+    cursor: pointer;
+    font-family: var(--fonte);
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.accessibility-panel button:hover {
+    background: var(--cor-primaria-2);
+    color: white;
+    border-color: var(--cor-primaria-2);
+}
+
+/* Classes de acessibilidade dinâmicas */
+/* Alto Contraste */
+.high-contrast {
+    filter: contrast(1.5);
+}
+
+.high-contrast .app-container,
+.high-contrast .container {
+    background: black !important;
+    color: yellow !important;
+    border: 2px solid yellow !important;
+}
+
+.high-contrast button {
+    background: yellow !important;
+    color: black !important;
+    border: 2px solid black !important;
+}
+
+.high-contrast input {
+    background: black !important;
+    color: yellow !important;
+    border: 2px solid yellow !important;
+}
+
+/* Aumento de fonte */
+.font-large {
+    font-size: 1.2rem !important;
+}
+
+.font-large body,
+.font-large .app-container,
+.font-large .container,
+.font-large button,
+.font-large input,
+.font-large .item-text {
+    font-size: 1.2rem !important;
+}
+
+.font-xlarge {
+    font-size: 1.5rem !important;
+}
+
+.font-xlarge body,
+.font-xlarge .app-container,
+.font-xlarge .container,
+.font-xlarge button,
+.font-xlarge input,
+.font-xlarge .item-text {
+    font-size: 1.5rem !important;
+}
+
+/* Modo leitor (remove decorações, foca no conteúdo) */
+.reader-mode * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.reader-mode .app-container,
+.reader-mode .container {
+    background: white !important;
+    border: 1px solid #ccc !important;
+}
+
+.reader-mode button,
+.reader-mode .accessibility-btn {
+    background: #f0f0f0 !important;
+    border: 1px solid #999 !important;
+    color: black !important;
+}
+
+/* Foco visível para navegação por teclado */
+*:focus-visible {
+    outline: 3px solid var(--cor-primaria-2) !important;
+    outline-offset: 3px !important;
+    border-radius: 4px !important;
+}
+
+/* Melhorias para leitores de tela */
+[aria-live="polite"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Indicadores visuais para foco */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+    outline: 3px solid var(--cor-primaria-2);
+    outline-offset: 2px;
+}
+
+/* Melhorar contraste para textos */
+.item-text {
+    color: var(--cor-texto);
+}
+
+/* Garantir que elementos clicáveis tenham tamanho adequado */
+button,
+.btn-clear,
+.btn-add,
+.btn-logout,
+.item-checkbox,
+.btn-edit,
+.btn-delete {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Responsividade para mobile no menu de acessibilidade */
+@media (max-width: 600px) {
+    .accessibility-btn .btn-text {
+        display: none;
+    }
+    
+    .accessibility-btn {
+        padding: 12px;
+    }
+    
+    .accessibility-panel {
+        min-width: 180px;
+        right: 0;
+        bottom: 55px;
+    }
+}
+
+/* Redução de movimento para usuários sensíveis */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

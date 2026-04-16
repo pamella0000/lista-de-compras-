@@ -4,66 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Login | Lista Compartilhada</title>
+    <title>Login | Lista Compartilhada Acessível</title>
     <link rel="stylesheet" href="src/login.css">
-    <!-- FontAwesome 6 (gratuito) -->
+    <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Manifest para PWA (se tiver) -->
     <link rel="manifest" href="manifest.json">
-    <!-- Theme color para navegadores mobile -->
     <meta name="theme-color" content="#EA3788">
+    <meta name="description" content="Login para lista de compras compartilhada com recursos de acessibilidade">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 </head>
 
 <body>
-    <div class="container fade-in-up">
-        <!-- Ilustração/ícone decorativo -->
+    <!-- Skip to content -->
+    <a href="#main-login" class="skip-link">Pular para o conteúdo principal</a>
+    
+    <!-- Botão de acessibilidade -->
+    <div class="accessibility-menu">
+        <button id="accessibilityBtn" class="accessibility-btn" aria-label="Abrir menu de acessibilidade" aria-expanded="false">
+            <i class="fas fa-universal-access"></i>
+            <span class="btn-text">Acessibilidade</span>
+        </button>
+        <div id="accessibilityPanel" class="accessibility-panel" hidden>
+            <h3>Ajustes de Acessibilidade</h3>
+            <button id="aumentarFonte" aria-label="Aumentar tamanho da fonte">
+                <i class="fas fa-text-height"></i> Aumentar Fonte
+            </button>
+            <button id="diminuirFonte" aria-label="Diminuir tamanho da fonte">
+                <i class="fas fa-text-height"></i> Diminuir Fonte
+            </button>
+            <button id="altoContraste" aria-label="Ativar alto contraste">
+                <i class="fas fa-adjust"></i> Alto Contraste
+            </button>
+            <button id="leitorTela" aria-label="Modo para leitor de tela">
+                <i class="fas fa-eye"></i> Modo Leitor
+            </button>
+            <button id="resetAcessibilidade" aria-label="Resetar configurações">
+                <i class="fas fa-undo-alt"></i> Resetar
+            </button>
+        </div>
+    </div>
+
+    <div class="container fade-in-up" id="main-login" role="main">
         <div class="icon-wrapper">
-            <i class="fas fa-basket-shopping"></i>
+            <i class="fas fa-basket-shopping" aria-hidden="true"></i>
         </div>
 
         <h2 class="titulo">Bem-vindo(a)</h2>
         <p class="subtitulo">Acesse sua lista de compras compartilhada</p>
 
-        <!-- Grupo de campo: E-mail -->
-        <div class="input-group">
-            <div class="input-icon">
-                <i class="fas fa-envelope"></i>
+        <form id="loginForm" onsubmit="event.preventDefault(); login();">
+            <div class="input-group">
+                <div class="input-icon">
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                </div>
+                <label for="email" class="visually-hidden">E-mail</label>
+                <input type="email" id="email" placeholder="E-mail" autocomplete="email" aria-label="Seu endereço de e-mail" required>
             </div>
-            <input type="email" id="email" placeholder="E-mail" autocomplete="email">
-        </div>
 
-        <!-- Grupo de campo: Senha -->
-        <div class="input-group">
-            <div class="input-icon">
-                <i class="fas fa-lock"></i>
+            <div class="input-group">
+                <div class="input-icon">
+                    <i class="fas fa-lock" aria-hidden="true"></i>
+                </div>
+                <label for="senha" class="visually-hidden">Senha</label>
+                <input type="password" id="senha" placeholder="Senha" autocomplete="current-password" aria-label="Sua senha" required>
             </div>
-            <input type="password" id="senha" placeholder="Senha" autocomplete="current-password">
-        </div>
 
-        <!-- Link esqueceu a senha (placeholder para UX) -->
-        <div class="forgot-password">
-            <a href="#" id="esqueceuSenha">Esqueceu a senha?</a>
-        </div>
+            <div class="forgot-password">
+                <a href="#" id="esqueceuSenha" aria-label="Recuperar senha">Esqueceu a senha?</a>
+            </div>
 
-        <!-- Mensagem de erro (invisível por padrão) -->
-        <div id="errorMessage" class="error-message">
-            <i class="fas fa-exclamation-circle"></i>
-            <span>E-mail ou senha inválidos</span>
-        </div>
+            <div id="errorMessage" class="error-message" role="alert" aria-live="polite" hidden>
+                <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                <span>E-mail ou senha inválidos</span>
+            </div>
 
-        <div class="botoes">
-            <button id="btnEntrar" class="btn-primary">
-                <i class="fas fa-arrow-right-to-bracket"></i>
-                Entrar
-            </button>
-            <button id="btnCadastrar" class="btn-secondary">
-                <i class="fas fa-user-plus"></i>
-                Criar nova conta
-            </button>
-        </div>
+            <div class="botoes">
+                <button type="submit" id="btnEntrar" class="btn-primary" aria-label="Entrar no aplicativo">
+                    <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i>
+                    Entrar
+                </button>
+                <button type="button" id="btnCadastrar" class="btn-secondary" onclick="cadastro()" aria-label="Criar nova conta">
+                    <i class="fas fa-user-plus" aria-hidden="true"></i>
+                    Criar nova conta
+                </button>
+            </div>
+        </form>
 
-        <p class="footer-note">Demo: use qualquer e-mail/senha para testar</p>
+        <p class="footer-note" role="note">Demo: use qualquer e-mail/senha para testar</p>
     </div>
+
+    <div id="liveRegion" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
 
     <script type="module" src="auth.js"></script>
 </body>
