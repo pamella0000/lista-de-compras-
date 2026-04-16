@@ -1,23 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MINHA LISTA DE COMPRAS</title>
-    <link rel="stylesheet" href="src/login.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Minha Lista de Compras</title>
+    <link rel="stylesheet" href="src/index.css">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Manifest PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#EA3788">
 </head>
+
 <body>
-    <h2 class="titulo">MINHA LISTA DE COMPRAS</h2>
-    
-    <button onclick="logout()">Sair</button>
+    <div class="app-container fade-in-up">
+        <!-- Cabeçalho -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-area">
+                    <i class="fas fa-basket-shopping"></i>
+                    <h1 class="titulo">Lista de Compras</h1>
+                </div>
+                <button id="logoutBtn" class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+            <p class="subtitulo">Compartilhada em tempo real</p>
+        </header>
 
-    <ul id="lista"></ul>
+        <!-- Estatísticas rápidas -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <i class="fas fa-list-ul"></i>
+                <span id="totalItens">0</span>
+                <small>itens</small>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-check-circle"></i>
+                <span id="itensComprados">0</span>
+                <small>comprados</small>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <span id="itensPendentes">0</span>
+                <small>pendentes</small>
+            </div>
+        </div>
 
-    <input type="text" id="item" placeholder="Novo Item">
-    <button onclick="adicionarItem()">Adicionar</button>
+        <!-- Área da lista -->
+        <div class="list-wrapper">
+            <div class="list-header">
+                <h3><i class="fas fa-shopping-cart"></i> Meus itens</h3>
+                <button id="limparListaBtn" class="btn-clear" onclick="limparLista()">
+                    <i class="fas fa-trash-alt"></i>
+                    Limpar tudo
+                </button>
+            </div>
+
+            <ul id="lista" class="shopping-list">
+                <!-- Os itens serão inseridos dinamicamente via JS -->
+                <li class="empty-state">
+                    <i class="fas fa-clipboard-list"></i>
+                    <p>Sua lista está vazia</p>
+                    <small>Adicione itens abaixo</small>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Área de adição de itens (fixa no mobile) -->
+        <div class="add-item-container">
+            <div class="add-item-wrapper">
+                <div class="input-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <input type="text" id="item" placeholder="Ex: Arroz, Leite, Café..." autocomplete="off">
+                <button id="adicionarBtn" class="btn-add" onclick="adicionarItem()">
+                    <i class="fas fa-plus"></i>
+                    <span>Adicionar</span>
+                </button>
+            </div>
+            <p class="dica">Pressione Enter para adicionar rapidamente</p>
+        </div>
+    </div>
 
     <script type="module" src="app.js"></script>
-
-    
 </body>
+
 </html>
